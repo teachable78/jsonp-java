@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="author" content="withinsea" />
+		<title>jsonp test</title>
+		<script type="text/javascript" src="lib/jquery-1.2.6.min.js"></script>
+		<script type="text/javascript" src="lib/json2.js"></script>
+		
+		<script type="text/javascript">
+			$(function () {
+				$("a").click(function () {
+					try {
+						var jsonp = $("#jsonp")[0].checked;
+						var dataType = $(this).attr("dataType") || "text";
+						var xhr = $.ajax({
+							method: "GET",
+							url: $(this).attr("href"),
+							dataType: jsonp ? "jsonp" : dataType,
+							jsonp: jsonp ? "jsonpCallback" : undefined,
+							success: function (data) {
+								if (typeof data == "string") {
+									$("pre").text("[text]\r\n\r\n" + data);
+								} else if (data == xhr.responseXML) {
+									$("pre").text("[xml]\r\n\r\n" + xhr.responseText);
+								} else {
+									$("pre").text("[object]\r\n\r\n" + JSON.stringify(data));
+								}
+							}
+						});
+					} catch (ex) {
+						alert(ex);
+					} finally {
+						return false;
+					}
+				});
+			});
+		</script> 
+		
+		<style type="text/css">
+			html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+			#main  { position: absolute; right: 50%; left: 0; padding: 20px; }
+			#sider { position: absolute; right: 0; left: 50%;	padding: 20px; border-left: 1px dashed gray; }
+			pre { width: 45%; height: 90%; margin: 1% auto; border: none;
+				font-family: 'consolas'; font-size: 12px; font-style: italic;
+				white-space: pre-wrap; /* css-3 */
+					white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+					white-space: -pre-wrap; /* Opera 4-6 */
+					white-space: -o-pre-wrap; /* Opera 7 */
+					word-wrap: break-word; /* Internet Explorer 5.5+ */
+			}
+		</style>
+		
+	</head>
+	<body>
+	
+		<pre id="main">response here</pre>
+		
+		<div id="sider">
+			<input id="jsonp" name="jsonp" type="checkbox" checked="checked"
+				/> <label for="jsonp">JSONP</label>
+			<ul>
+				<li><a href="data.txt" dataType="text">data.txt</a></li>
+				<li><a href="data.html" dataType="html">data.html</a></li>
+				<li><a href="data.xml" dataType="xml">data.xml</a></li>
+				<li><a href="data.json" dataType="json">data.json</a></li>
+			</ul>
+		</div>
+	
+	</body>
+</html>
