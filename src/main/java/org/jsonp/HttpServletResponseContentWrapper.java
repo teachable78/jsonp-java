@@ -36,15 +36,15 @@ public class HttpServletResponseContentWrapper extends
 	}
 
 	public void flushWrapper() throws IOException {
+		if (bufferWriter != null)
+			bufferWriter.close();
+		if (buffer != null)
+			buffer.close();
 		byte[] content = wrap(buffer.toByteArray());
 		getResponse().setContentLength(content.length);
 		getResponse().getOutputStream().write(content);
 		getResponse().flushBuffer();
 		committed = true;
-		if (bufferWriter != null)
-			bufferWriter.close();
-		if (buffer != null)
-			buffer.close();
 	}
 
 	public byte[] wrap(byte[] content) throws IOException {
